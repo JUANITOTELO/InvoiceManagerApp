@@ -1,4 +1,4 @@
-package com.example.invoicemanagerapp.loginbutton
+package com.example.invoicemanagerapp.button
 
 import android.util.Log
 import androidx.compose.animation.animateColorAsState
@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LoginButton() {
+fun Button(text: String) {
     val interactionSource = remember {
         MutableInteractionSource()
     }
@@ -48,6 +48,6 @@ fun LoginButton() {
             .clip(shape = RoundedCornerShape(15.dp))
             .width(100.dp)
     ) {
-        Text(text = "Login")
+        Text(text = text)
     }
 }

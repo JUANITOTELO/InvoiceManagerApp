@@ -1,0 +1,118 @@
+{
+  "name": "folder",
+  "version": 33,
+  "source-key": {
+    "type": "figma",
+    "file": "apgDoT0ZtXs7iPzSmLRBJS",
+    "node": "64:2",
+    "version": "5302075927",
+    "component-id": "07a98ab6d790d3021b6f6c64a0ce11cc102b7679"
+  },
+  "default": "Folder",
+  "design": {
+    "atoms": [
+      {
+        "type": "group",
+        "id": "top_level",
+        "root": "true"
+      },
+      {
+        "type": "text",
+        "id": "text"
+      },
+      {
+        "type": "vector",
+        "id": "vector"
+      }
+    ],
+    "modes": {
+      "Folder": {
+        "rules": [
+          {
+            "id": "top_level",
+            "is-structured": false,
+            "children": [
+              "text",
+              "vector"
+            ],
+            "clip-content": false
+          },
+          {
+            "id": "text",
+            "margin": {
+              "left": 21.0,
+              "top": 23.0,
+              "right": 21.0,
+              "bottom": 16.0
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            },
+            "font-weight": 700.0,
+            "color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.3215686274509804
+            },
+            "text-content": "2024",
+            "overflow": "visible",
+            "text-align-vertical": "center",
+            "line-height": 1.36181640625,
+            "typeface": "Open Sans"
+          },
+          {
+            "id": "vector",
+            "alignment": {
+              "horizontal": {
+                "attachment": "start",
+                "offset": -6.5
+              },
+              "vertical": {
+                "attachment": "start",
+                "offset": -2.50006103515625
+              }
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            },
+            "vector-content": "vector.svg"
+          }
+        ]
+      }
+    }
+  },
+  "parameters": {
+    "text": {
+      "data-type": "text",
+      "required": false,
+      "description": ""
+    }
+  },
+  "previews": [
+    {
+      "design": "Folder",
+      "size": {
+        "width": 75.0,
+        "height": 58.0
+      }
+    }
+  ],
+  "adin-component-search-paths": [],
+  "image-search-paths": [],
+  "vector-search-paths": []
+}
