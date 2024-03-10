@@ -1,5 +1,5 @@
-package com.example.invoicemanagerapp.introduccion.quiz1
-import com.example.invoicemanagerapp.introduccion.Calculadora
+package com.devdavidm.invoicemanagerapp.introduccion.quiz1
+import com.devdavidm.invoicemanagerapp.introduccion.Calculadora
 
 fun main() {
     println("Ingrese a y b: ")

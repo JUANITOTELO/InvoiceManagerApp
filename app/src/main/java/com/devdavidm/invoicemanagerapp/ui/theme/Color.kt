@@ -1,4 +1,4 @@
-package com.example.invoicemanagerapp.ui.theme
+package com.devdavidm.invoicemanagerapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

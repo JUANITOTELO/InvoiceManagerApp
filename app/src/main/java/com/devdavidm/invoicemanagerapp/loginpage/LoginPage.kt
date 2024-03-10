@@ -1,4 +1,4 @@
-package com.example.invoicemanagerapp.loginpage
+package com.devdavidm.invoicemanagerapp.loginpage
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.focusable
@@ -35,9 +35,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import com.example.invoicemanagerapp.R
-import com.example.invoicemanagerapp.button.Button
-import com.example.invoicemanagerapp.folder.Folder
+import com.devdavidm.invoicemanagerapp.R
+import com.devdavidm.invoicemanagerapp.button.Button
 
 @Composable
 fun LoginPage(){
@@ -66,7 +65,6 @@ fun ContainerFocus() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Folder(text = "2023")
         Image(painter = logo, contentDescription = "logo")
         TextInput(label = "Usuario")
         Spacer(modifier = Modifier.height(7.dp))

@@ -1,4 +1,4 @@
-package com.example.invoicemanagerapp
+package com.devdavidm.invoicemanagerapp
 
 import org.junit.Test
 
