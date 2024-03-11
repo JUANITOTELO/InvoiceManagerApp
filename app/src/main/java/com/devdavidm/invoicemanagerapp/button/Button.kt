@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun Button(text: String) {
+fun Button(text: String, onClick: ()->Unit) {
     val interactionSource = remember {
         MutableInteractionSource()
     }
@@ -38,9 +38,7 @@ fun Button(text: String) {
 
         ),
         interactionSource = interactionSource,
-        onClick = {
-            Log.d("loginButtonPressed", isPressed.toString())
-        },
+        onClick = onClick,
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 3.dp
         ),

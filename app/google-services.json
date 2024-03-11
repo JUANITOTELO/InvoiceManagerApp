@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "637308499306",
+    "project_id": "invoice-manager-assistant",
+    "storage_bucket": "invoice-manager-assistant.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:637308499306:android:528a5c3b74914998166113",
+        "android_client_info": {
+          "package_name": "com.devdavidm.invoicemanagerapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "637308499306-6h3a552vj0n3ks4m8emf9tpo0k20j2bo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.devdavidm.invoicemanagerapp",
+            "certificate_hash": "fd6111092d15a745ccd7c5db3947957d7a2092b2"
+          }
+        },
+        {
+          "client_id": "637308499306-aq6ol45b3rs7uapmiticamg780saqaqs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfk_br22bdr1f4so78jDv5j2ugyQY46ck"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "637308499306-aq6ol45b3rs7uapmiticamg780saqaqs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
