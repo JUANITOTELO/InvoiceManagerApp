@@ -97,7 +97,7 @@ fun ContainerFocus(context: ComponentActivity, navController: NavController, aut
         TextInput(label = "Correo", mutableText = emailValue)
         Spacer(modifier = Modifier.height(7.dp))
         TextInput(label = "Contraseña", password = true, mutableText = passwordValue)
-        Button("Ingresar") {
+        Button(text="Ingresar") {
             login(emailValue.value.text, passwordValue.value.text, auth, context, navController)
         }
     }
@@ -106,8 +106,6 @@ fun ContainerFocus(context: ComponentActivity, navController: NavController, aut
 
 @Composable
 fun TextInput(label: String, password: Boolean =false, mutableText: MutableState<TextFieldValue>){
-
-
     OutlinedTextField(
         value = mutableText.value,
         onValueChange = {mutableText.value=it},

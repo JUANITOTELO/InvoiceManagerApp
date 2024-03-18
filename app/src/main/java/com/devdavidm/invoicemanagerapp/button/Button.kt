@@ -20,15 +20,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun Button(text: String, onClick: ()->Unit) {
+fun Button(foreColor: Color = Color(0xFF000000), pressColor: Color = Color(0xFFD3D3D3), text: String, onClick: ()->Unit) {
     val interactionSource = remember {
         MutableInteractionSource()
     }
     val isPressed by interactionSource.collectIsPressedAsState()
-    val containerButtonColor: Color by animateColorAsState(targetValue = if (isPressed) Color(0xFFD3D3D3) else Color(0xFF000000),
+    val containerButtonColor: Color by animateColorAsState(targetValue = if (isPressed) pressColor else foreColor,
         label = "containerButtonColor", animationSpec = SnapSpec<Color>()
     )
-    val contentButtonColor: Color by animateColorAsState(targetValue = if (!isPressed) Color(0xFFD3D3D3) else Color(0xFF000000),
+    val contentButtonColor: Color by animateColorAsState(targetValue = if (!isPressed) pressColor else foreColor,
         label = "contentButtonColor", animationSpec = SnapSpec<Color>()
     )
     Button(
@@ -45,7 +45,6 @@ fun Button(text: String, onClick: ()->Unit) {
         modifier = Modifier
             .padding(all = 15.dp)
             .clip(shape = RoundedCornerShape(15.dp))
-            .width(110.dp)
     ) {
         Text(text = text)
     }

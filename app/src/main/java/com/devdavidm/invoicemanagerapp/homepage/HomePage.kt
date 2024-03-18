@@ -22,8 +22,8 @@ fun HomePage(navController: NavController, auth: FirebaseAuth){
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Main Page")
-            Button("Salir"){
+            Text(text = "Home Page")
+            Button(text = "Salir"){
                 auth.signOut()
                 navController.navigate("login"){
                     popUpTo("home"){

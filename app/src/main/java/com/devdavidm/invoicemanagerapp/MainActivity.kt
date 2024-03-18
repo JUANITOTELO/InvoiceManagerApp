@@ -9,6 +9,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.devdavidm.invoicemanagerapp.homepage.HomePage
 import com.devdavidm.invoicemanagerapp.loginpage.LoginPage
+import com.devdavidm.invoicemanagerapp.onboardingpage.OnboardingPage
+import com.devdavidm.invoicemanagerapp.registerpage.RegisterPage
 import com.devdavidm.invoicemanagerapp.ui.theme.InvoiceManagerAppTheme
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -28,8 +30,10 @@ class MainActivity : ComponentActivity() {
 fun MyApp(context: ComponentActivity){
     val navController = rememberNavController()
     val auth = Firebase.auth
-    NavHost(navController = navController, startDestination = "login"){
+    NavHost(navController = navController, startDestination = "onboarding"){
+        composable("onboarding"){ OnboardingPage(navController) }
         composable("login"){ LoginPage(context = context, navController, auth) }
+        composable("register"){ RegisterPage(context = context, navController, auth) }
         composable("home"){ HomePage(navController, auth) }
     }
     if(auth.currentUser != null){
