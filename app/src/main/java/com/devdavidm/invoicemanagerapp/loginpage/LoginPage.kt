@@ -3,12 +3,15 @@ package com.devdavidm.invoicemanagerapp.loginpage
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -97,6 +100,19 @@ fun ContainerFocus(context: ComponentActivity, navController: NavController, aut
         TextInput(label = "Correo", mutableText = emailValue)
         Spacer(modifier = Modifier.height(7.dp))
         TextInput(label = "Contraseña", password = true, mutableText = passwordValue)
+        Spacer(modifier = Modifier.height(15.dp))
+        Row{
+            // Forgot password
+            Text(
+                text = "¿Olvidaste tu contraseña?",
+                color = Color(0xFF000000),
+                modifier = Modifier.clickable {
+                    // Handle click event here
+                    // For example, navigate to the forgot password screen
+                    navController.navigate("forgot_password")
+                }
+            )
+        }
         Button(text="Ingresar") {
             login(emailValue.value.text, passwordValue.value.text, auth, context, navController)
         }

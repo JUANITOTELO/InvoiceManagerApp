@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.devdavidm.invoicemanagerapp.forgotpasswordpage.ForgotPasswordPage
 import com.devdavidm.invoicemanagerapp.homepage.HomePage
 import com.devdavidm.invoicemanagerapp.loginpage.LoginPage
 import com.devdavidm.invoicemanagerapp.onboardingpage.OnboardingPage
@@ -33,6 +34,7 @@ fun MyApp(context: ComponentActivity){
     NavHost(navController = navController, startDestination = "onboarding"){
         composable("onboarding"){ OnboardingPage(navController) }
         composable("login"){ LoginPage(context = context, navController, auth) }
+        composable("forgot_password"){ ForgotPasswordPage(context = context, navController, auth) }
         composable("register"){ RegisterPage(context = context, navController, auth) }
         composable("home"){ HomePage(navController, auth) }
     }
