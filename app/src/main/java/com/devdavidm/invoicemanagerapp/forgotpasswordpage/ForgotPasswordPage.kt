@@ -1,5 +1,6 @@
 package com.devdavidm.invoicemanagerapp.forgotpasswordpage
 
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -59,11 +60,26 @@ fun ContainerFocus(context: ComponentActivity, navController: NavController, aut
         TextInput(label = "Correo", mutableText = emailValue)
         Spacer(modifier = Modifier.height(7.dp))
         Button(text="Enviar"){
-            forgotPassword(emailValue.value.text, auth)
+            forgotPassword(emailValue.value.text, auth, context, navController)
         }
     }
 }
 
-fun forgotPassword(text: String, auth: FirebaseAuth) {
+fun forgotPassword(text: String, auth: FirebaseAuth, context: ComponentActivity, navController: NavController){
+    if (text.isEmpty()){
+        Toast.makeText(context, "Campo vacío", Toast.LENGTH_SHORT).show()
+        return
+    }
     auth.sendPasswordResetEmail(text)
+        .addOnCompleteListener(context){task ->
+            if (task.isSuccessful){
+                navController.navigate("login") {
+                    popUpTo("forgotpassword"){
+                        inclusive = true
+                    }
+                }
+            } else {
+                Toast.makeText(context, "Correo no válido", Toast.LENGTH_SHORT).show()
+            }
+        }
 }

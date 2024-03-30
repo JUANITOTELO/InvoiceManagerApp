@@ -1,6 +1,7 @@
 package com.devdavidm.invoicemanagerapp.loginpage
 
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -56,20 +57,27 @@ fun LoginPage(context: ComponentActivity, navController: NavController, auth: Fi
     }
 }
 fun login(email: String, password: String, auth: FirebaseAuth, context: ComponentActivity, navController: NavController){
+    if(email.isEmpty() || password.isEmpty()){
+        Toast.makeText(context, "Por favor, llena todos los campos", Toast.LENGTH_SHORT).show()
+        return
+    }
+    if (!email.contains("@") && !email.contains(".")){
+        Toast.makeText(context, "Correo inválido", Toast.LENGTH_LONG).show()
+        return
+    }
     auth.signInWithEmailAndPassword(email,password)
         .addOnCompleteListener(context){task ->
             if (task.isSuccessful){
-                Log.d("AUTH", "Success!")
+                Toast.makeText(context, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
                 navController.navigate("home") {
                     popUpTo("login"){
                         inclusive = true
                     }
                 }
             } else {
-                Log.d("NOAUTH", "Failed: ${task.exception}")
+                Toast.makeText(context, "Error al iniciar sesión", Toast.LENGTH_SHORT).show()
             }
         }
-    Log.d("LoginFunction","User: $email Password: $password")
 }
 @Composable
 fun ContainerFocus(context: ComponentActivity, navController: NavController, auth: FirebaseAuth) {

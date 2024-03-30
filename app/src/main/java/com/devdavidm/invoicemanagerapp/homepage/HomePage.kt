@@ -1,28 +1,33 @@
 package com.devdavidm.invoicemanagerapp.homepage
 
-import android.widget.Button
+import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.outlined.Folder
+import androidx.compose.material.icons.outlined.TagFaces
+import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.NavigationDrawerItemColors
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
@@ -37,9 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
-import com.devdavidm.invoicemanagerapp.button.Button
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
@@ -58,7 +61,7 @@ fun getScreenWidth(): Int{
 fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth){
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val items = listOf("Inicio", "Perfil", "Cerrar sesión")
+    val items = listOf("Inicio", "Perfil")
     val selectedItem = remember { mutableStateOf(items[0])}
     val screenWidth = getScreenWidth()
 
@@ -71,21 +74,43 @@ fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth){
                     .width((screenWidth * 0.8).dp)
             ) {
             Column(
-                modifier = Modifier.padding(20.dp, 0.dp).fillMaxSize(),
+                modifier = Modifier
+                    .padding(20.dp, 0.dp)
+                    .fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                    Spacer(modifier = Modifier.height(35.dp))
+                    Spacer(modifier = Modifier.height(40.dp))
                     items.forEach {
                             item ->
                         NavigationDrawerItem(
                             shape = RoundedCornerShape(10.dp),
                             label = { Text(item, textAlign = TextAlign.Center) },
+                            colors = NavigationDrawerItemDefaults.colors(
+                                unselectedContainerColor = Color(0xFFFAFAFA),
+                                unselectedTextColor = Color(0xFF000000),
+                                unselectedIconColor = Color(0xFF000000),
+                                selectedContainerColor = Color(0xFFD3D3D3),
+                                selectedTextColor = Color(0xFF000000),
+                                selectedIconColor = Color(0xFF000000),
+                            ),
+                            icon = {
+                                when(item){
+                                    "Inicio" -> {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Folder,
+                                            contentDescription = "Inicio"
+                                        )
+                                    }
+                                    "Perfil" -> {
+                                        Icon(
+                                            imageVector = Icons.Outlined.TagFaces,
+                                            contentDescription = "Perfil"
+                                        )
+                                    }
+                                }
+                            },
                             selected = selectedItem.value == item,
                             onClick = {
-                                if(item == "Cerrar sesión"){
-                                    auth.signOut()
-                                    navController.navigate("login")
-                                }
                                 selectedItem.value = item
                                 scope.launch {
                                     drawerState.close()
@@ -94,22 +119,68 @@ fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth){
                         )
                     }
                 }
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(20.dp, 20.dp),
+                    verticalArrangement = Arrangement.Bottom,
+                ) {
+                    NavigationDrawerItem(
+                        shape = RoundedCornerShape(10.dp),
+                        modifier = Modifier.width(screenWidth.dp * 0.5f),
+                        label = { Text("Cerrar sesión", textAlign = TextAlign.Center) },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Rounded.Close,
+                                contentDescription = "Cerrar sesión",
+                                modifier = Modifier
+                                    .width(24.dp)
+                                    .height(24.dp)
+                            )
+                        },
+                        selected = selectedItem.value == "Cerrar sesión",
+                        colors = NavigationDrawerItemDefaults.colors(
+                            unselectedContainerColor = Color(0xFFF44336),
+                            unselectedTextColor = Color(0xFFFAFAFA),
+                            unselectedIconColor = Color(0xFFFAFAFA),
+                            selectedContainerColor = Color(0xFFFF0000),
+                            selectedTextColor = Color(0xFFFAFAFA),
+                            selectedIconColor = Color(0xFFFAFAFA),
+                        ),
+                        onClick = {
+                            auth.signOut()
+                            navController.navigate("onboarding"){
+                                popUpTo("home"){
+                                    inclusive = true
+                                }
+                            }
+                            selectedItem.value = "Cerrar sesión"
+                            scope.launch {
+                                drawerState.close()
+                            }
+                        }
+                    )
+
+                }
             }
         },
         content = {
-            Surface(color = Color(0xFFFAFAFA)) {
+            Surface(
+                color = Color(0xFFFAFAFA)
+            ) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize(),
                     horizontalAlignment = Alignment.End
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.Menu,
+                        imageVector = Icons.Rounded.Menu,
                         contentDescription = "Menu",
                         modifier = Modifier
                             .padding(20.dp, 20.dp)
                             .height(40.dp)
                             .width(40.dp)
+                            .clip(RoundedCornerShape(10.dp))
                             .clickable { scope.launch { drawerState.open() } }
                     )
                     Spacer(
@@ -118,15 +189,15 @@ fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth){
                             .height(3.dp)
                             .background(Color.Black)
                     )
-                }
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
                     PagesRender(selectedItem.value, navController, auth)
                 }
+            }
+            Column(
+                modifier = Modifier.fillMaxSize().padding(20.dp),
+                verticalArrangement = Arrangement.Bottom,
+                horizontalAlignment = Alignment.Start
+            ) {
+                MyFloatingActionButton()
             }
         }
     )
@@ -136,30 +207,18 @@ fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth){
 fun PagesRender(value: String, navController: NavController, auth: FirebaseAuth) {
     when(value){
         "Inicio" -> {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(text = "Inicio")
-            }
+            DirectoryPage()
         }
         "Perfil" -> {
+            val user = auth.currentUser
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(text = "Perfil")
-            }
-        }
-        "Cerrar sesión" -> {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(text = "Cerrar sesión")
+                Text(text = "Nombre: ${user?.displayName}")
+                Text(text = "Correo: ${user?.email}")
             }
         }
     }

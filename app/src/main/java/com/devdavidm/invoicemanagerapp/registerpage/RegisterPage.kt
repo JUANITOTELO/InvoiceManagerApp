@@ -1,5 +1,6 @@
 package com.devdavidm.invoicemanagerapp.registerpage
 
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.focusable
@@ -43,14 +44,29 @@ import com.devdavidm.invoicemanagerapp.loginpage.login
 import com.google.firebase.auth.FirebaseAuth
 
 fun register(email: String, password: String, auth: FirebaseAuth, context: ComponentActivity, navController: NavController){
+    if (email.isEmpty() || password.isEmpty()){
+        Toast.makeText(context, "Por favor, llene todos los campos", Toast.LENGTH_SHORT).show()
+        return
+    }
+    if (password.length < 6){
+        Toast.makeText(context, "La contraseña debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show()
+        return
+    }
+    if (!email.contains("@") && !email.contains(".")){
+        Toast.makeText(context, "Correo inválido", Toast.LENGTH_SHORT).show()
+        return
+    }
     auth.createUserWithEmailAndPassword(email,password)
         .addOnCompleteListener(context){task ->
             if (task.isSuccessful){
+                Toast.makeText(context, "Usuario registrado exitosamente", Toast.LENGTH_SHORT).show()
                 navController.navigate("home") {
                     popUpTo("register"){
                         inclusive = true
                     }
                 }
+            } else {
+                Toast.makeText(context, "Error al registrar el usuario", Toast.LENGTH_SHORT).show()
             }
         }
 }
@@ -99,6 +115,8 @@ fun ContainerFocus(context: ComponentActivity, navController: NavController, aut
                     context,
                     navController
                 )
+            } else {
+                Toast.makeText(context, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
             }
         }
     }
