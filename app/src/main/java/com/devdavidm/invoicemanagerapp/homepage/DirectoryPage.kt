@@ -58,7 +58,7 @@ fun DirectoryPage(){
 }
 
 @Composable
-fun MyFloatingActionButton() {
+fun NewFolderFloatingButton() {
     val context = LocalContext.current
     ExtendedFloatingActionButton(
         containerColor = Color(0xFF000000),

@@ -1,23 +1,21 @@
 package com.devdavidm.invoicemanagerapp.homepage
 
-import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.outlined.ContactPage
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.TagFaces
 import androidx.compose.material.icons.rounded.Close
@@ -26,7 +24,6 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemColors
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -39,7 +36,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -61,11 +60,19 @@ fun getScreenWidth(): Int{
 fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth){
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val items = listOf("Inicio", "Perfil")
+    val items = listOf("Carpetas", "Facturas", "Perfil")
     val selectedItem = remember { mutableStateOf(items[0])}
     val screenWidth = getScreenWidth()
+    val focusManager = LocalFocusManager.current
 
     ModalNavigationDrawer(
+        modifier = Modifier.pointerInput(UInt) {
+            detectTapGestures(
+                onTap = {
+                    focusManager.clearFocus()
+                }
+            )
+        },
         drawerState = drawerState,
         drawerContent = {
             Surface(
@@ -83,6 +90,9 @@ fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth){
                     items.forEach {
                             item ->
                         NavigationDrawerItem(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(10.dp))
+                                    .border(2.dp, Color.Black, RoundedCornerShape(10.dp)),
                             shape = RoundedCornerShape(10.dp),
                             label = { Text(item, textAlign = TextAlign.Center) },
                             colors = NavigationDrawerItemDefaults.colors(
@@ -95,10 +105,16 @@ fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth){
                             ),
                             icon = {
                                 when(item){
-                                    "Inicio" -> {
+                                    "Carpetas" -> {
                                         Icon(
                                             imageVector = Icons.Outlined.Folder,
-                                            contentDescription = "Inicio"
+                                            contentDescription = "Carpeta"
+                                        )
+                                    }
+                                    "Facturas" -> {
+                                        Icon(
+                                            imageVector = Icons.Outlined.ContactPage,
+                                            contentDescription = "Facturas"
                                         )
                                     }
                                     "Perfil" -> {
@@ -173,16 +189,21 @@ fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth){
                         .fillMaxSize(),
                     horizontalAlignment = Alignment.End
                 ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Menu,
-                        contentDescription = "Menu",
-                        modifier = Modifier
-                            .padding(20.dp, 20.dp)
-                            .height(40.dp)
-                            .width(40.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .clickable { scope.launch { drawerState.open() } }
-                    )
+                    Row {
+                        if(selectedItem.value == "Carpetas" || selectedItem.value == "Facturas") {
+                            SearchBar()
+                        }
+                        Icon(
+                            imageVector = Icons.Rounded.Menu,
+                            contentDescription = "Menu",
+                            modifier = Modifier
+                                .padding(20.dp, 20.dp)
+                                .height(40.dp)
+                                .width(40.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .clickable { scope.launch { drawerState.open() } }
+                        )
+                    }
                     Spacer(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -193,11 +214,17 @@ fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth){
                 }
             }
             Column(
-                modifier = Modifier.fillMaxSize().padding(20.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(20.dp),
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.Start
             ) {
-                MyFloatingActionButton()
+                if (selectedItem.value == "Carpetas"){
+                    NewFolderFloatingButton()
+                } else if (selectedItem.value == "Facturas"){
+                    NewInvoiceFloatingButton()
+                }
             }
         }
     )
@@ -206,8 +233,11 @@ fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth){
 @Composable
 fun PagesRender(value: String, navController: NavController, auth: FirebaseAuth) {
     when(value){
-        "Inicio" -> {
+        "Carpetas" -> {
             DirectoryPage()
+        }
+        "Facturas" -> {
+            InvoicesPage()
         }
         "Perfil" -> {
             val user = auth.currentUser
