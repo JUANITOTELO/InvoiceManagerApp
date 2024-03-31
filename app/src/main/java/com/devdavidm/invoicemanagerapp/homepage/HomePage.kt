@@ -187,7 +187,7 @@ fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth){
                 Column(
                     modifier = Modifier
                         .fillMaxSize(),
-                    horizontalAlignment = Alignment.End
+                    horizontalAlignment = Alignment.End,
                 ) {
                     Row {
                         if(selectedItem.value == "Carpetas" || selectedItem.value == "Facturas") {
