@@ -51,17 +51,22 @@ fun HomePage(navController: NavController, auth: FirebaseAuth){
 }
 
 @Composable
+fun HomePage(navController: NavController, auth: FirebaseAuth, selectedItem: String){
+    OptionsMenuDrawer(navController, auth, selectedItem)
+}
+
+@Composable
 fun getScreenWidth(): Int{
     val configuration = LocalConfiguration.current
     return configuration.screenWidthDp
 }
 
 @Composable
-fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth){
+fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth, item: String = "Carpetas"){
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val items = listOf("Carpetas", "Facturas", "Perfil")
-    val selectedItem = remember { mutableStateOf(items[0])}
+    val selectedItem = remember { mutableStateOf(item)}
     val screenWidth = getScreenWidth()
     val focusManager = LocalFocusManager.current
 
@@ -223,7 +228,7 @@ fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth){
                 if (selectedItem.value == "Carpetas"){
                     NewFolderFloatingButton()
                 } else if (selectedItem.value == "Facturas"){
-                    NewInvoiceFloatingButton()
+                    NewInvoiceFloatingButton(navController)
                 }
             }
         }

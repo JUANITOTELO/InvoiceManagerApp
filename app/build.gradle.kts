@@ -68,6 +68,11 @@ dependencies {
     implementation("androidx.compose.material:material-icons-core:1.6.4")
     // For extended icons, you can also add:
     implementation("androidx.compose.material:material-icons-extended:1.6.4")
+    implementation("com.google.mlkit:text-recognition:16.0.0")
+    implementation("androidx.camera:camera-core:1.3.2")
+    implementation("androidx.camera:camera-camera2:1.3.2")
+    implementation("androidx.camera:camera-lifecycle:1.3.2")
+    implementation("androidx.camera:camera-view:1.3.2")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

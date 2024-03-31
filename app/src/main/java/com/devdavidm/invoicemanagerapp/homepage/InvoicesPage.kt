@@ -18,6 +18,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
 @Composable
 fun InvoicesPage(){
@@ -50,7 +52,7 @@ fun InvoicesPage(){
 }
 
 @Composable
-fun NewInvoiceFloatingButton(){
+fun NewInvoiceFloatingButton(navController: NavController){
     val context = LocalContext.current
     val isOpen = remember { mutableStateOf(false) }
     val angle: Float by animateFloatAsState(if (isOpen.value) 45f else 0f, label = "")
@@ -78,6 +80,7 @@ fun NewInvoiceFloatingButton(){
                     containerColor = Color(0xFF000000),
                     contentColor = Color(0xFFFAFAFA),
                     onClick = {
+                        navController.navigate("cameraPreview")
                         Toast.makeText(context, "Nueva Factura (OCR)", Toast.LENGTH_SHORT).show()
                     }
                 ){
