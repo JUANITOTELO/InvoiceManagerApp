@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import com.devdavidm.invoicemanagerapp.camerapreview.CameraPreviewPage
 import com.devdavidm.invoicemanagerapp.forgotpasswordpage.ForgotPasswordPage
 import com.devdavidm.invoicemanagerapp.homepage.HomePage
+import com.devdavidm.invoicemanagerapp.invoicespages.NewInvoicePage
 import com.devdavidm.invoicemanagerapp.loginpage.LoginPage
 import com.devdavidm.invoicemanagerapp.onboardingpage.OnboardingPage
 import com.devdavidm.invoicemanagerapp.registerpage.RegisterPage
@@ -39,11 +40,12 @@ fun MyApp(context: ComponentActivity){
         composable("register"){ RegisterPage(context = context, navController, auth) }
         composable("home"){ HomePage(navController, auth) }
         composable("home/Facturas"){ HomePage(navController, auth, "Facturas") }
+        composable("new_invoice"){ NewInvoicePage(navController) }
         composable("cameraPreview"){ CameraPreviewPage(navController) }
     }
     if(auth.currentUser != null){
         navController.navigate("home"){
-            popUpTo("login"){
+            popUpTo("onboarding"){
                 inclusive = true
             }
         }

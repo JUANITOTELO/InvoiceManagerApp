@@ -1,6 +1,7 @@
 package com.devdavidm.invoicemanagerapp.camerapreview
 
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -63,6 +64,13 @@ fun CameraPreviewPage(navController: NavController) {
             launcher.launch(android.Manifest.permission.CAMERA)
         }
     }
+    BackHandler {
+        navController.navigate("home/Facturas"){
+            popUpTo("cameraPreview"){
+                inclusive = true
+            }
+        }
+    }
 }
 
 @Composable
@@ -110,7 +118,11 @@ fun CameraPreview(navController: NavController) {
             Button(
                 onClick = {
                     Toast.makeText(localContext, "Tomar foto", Toast.LENGTH_SHORT).show()
-                    navController.navigate("home/Facturas")
+                    navController.navigate("home/Facturas"){
+                        popUpTo("cameraPreview"){
+                            inclusive = true
+                        }
+                    }
                 },
                 shape = RoundedCornerShape(100),
                 border = BorderStroke(2.dp, Color(0xFF000000)),

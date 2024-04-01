@@ -1,4 +1,4 @@
-package com.devdavidm.invoicemanagerapp.homepage
+package com.devdavidm.invoicemanagerapp.invoicespages
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
@@ -67,6 +67,7 @@ fun NewInvoiceFloatingButton(navController: NavController){
                     containerColor = Color(0xFF000000),
                     contentColor = Color(0xFFFAFAFA),
                     onClick = {
+                        navController.navigate("new_invoice")
                         Toast.makeText(context, "Nueva Factura", Toast.LENGTH_SHORT).show()
                     }
                 ) {

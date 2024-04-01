@@ -3,6 +3,7 @@ package com.devdavidm.invoicemanagerapp.loginpage
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
@@ -14,10 +15,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
@@ -33,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
@@ -45,7 +50,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.devdavidm.invoicemanagerapp.R
-import com.devdavidm.invoicemanagerapp.button.Button
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -82,6 +86,7 @@ fun login(email: String, password: String, auth: FirebaseAuth, context: Componen
 @Composable
 fun ContainerFocus(context: ComponentActivity, navController: NavController, auth: FirebaseAuth) {
     val focusManager = LocalFocusManager.current
+    val screenHeight = LocalConfiguration.current.screenHeightDp
     val scrollState = rememberScrollState()
     val logo: Painter = painterResource(id = R.drawable.logo)
     Column(
@@ -121,8 +126,18 @@ fun ContainerFocus(context: ComponentActivity, navController: NavController, aut
                 }
             )
         }
-        Button(text="Ingresar") {
-            login(emailValue.value.text, passwordValue.value.text, auth, context, navController)
+        Spacer(modifier = Modifier.height(15.dp))
+        Button(
+            modifier = Modifier.height((screenHeight*0.06).dp),
+            colors = ButtonDefaults.buttonColors(
+                contentColor = Color(0xFFFAFAFA),
+                containerColor = Color(0xFF000000)
+            ),
+            onClick = {
+                login(emailValue.value.text, passwordValue.value.text, auth, context, navController)
+            }
+        ) {
+            Text(text = "Iniciar sesión")
         }
     }
 }

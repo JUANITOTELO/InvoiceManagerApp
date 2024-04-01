@@ -14,6 +14,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
@@ -24,9 +26,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
@@ -39,7 +43,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.devdavidm.invoicemanagerapp.R
-import com.devdavidm.invoicemanagerapp.button.Button
 import com.devdavidm.invoicemanagerapp.loginpage.login
 import com.google.firebase.auth.FirebaseAuth
 
@@ -76,6 +79,8 @@ fun ContainerFocus(context: ComponentActivity, navController: NavController, aut
     val focusManager = LocalFocusManager.current
     val scrollState = rememberScrollState()
     val logo: Painter = painterResource(id = R.drawable.logo)
+    val screenHeight = LocalConfiguration.current.screenHeightDp
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -106,7 +111,13 @@ fun ContainerFocus(context: ComponentActivity, navController: NavController, aut
         Spacer(modifier = Modifier.height(7.dp))
         TextInput(label = "Confirmar Contraseña", password = true, mutableText = confirmPasswordValue)
         Spacer(modifier = Modifier.height(20.dp))
-        Button(text = "Registrarse") {
+        Button(
+            modifier = Modifier.height((screenHeight*0.06).dp),
+            colors = ButtonDefaults.buttonColors(
+                contentColor = Color(0xFFFAFAFA),
+                containerColor = Color(0xFF000000)
+            ),
+            onClick = {
             if (passwordValue.value.text == confirmPasswordValue.value.text) {
                 register(
                     emailValue.value.text,
@@ -118,6 +129,8 @@ fun ContainerFocus(context: ComponentActivity, navController: NavController, aut
             } else {
                 Toast.makeText(context, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
             }
+        }) {
+            Text(text = "Registrarse")
         }
     }
 }
