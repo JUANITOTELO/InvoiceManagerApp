@@ -144,7 +144,7 @@ fun ContainerFocus(context: ComponentActivity, navController: NavController, aut
 
 
 @Composable
-fun TextInput(label: String, password: Boolean =false, mutableText: MutableState<TextFieldValue>){
+fun TextInput(label: String, password: Boolean = false, number: Boolean = false, mutableText: MutableState<TextFieldValue>){
     OutlinedTextField(
         value = mutableText.value,
         onValueChange = {mutableText.value=it},
@@ -157,7 +157,7 @@ fun TextInput(label: String, password: Boolean =false, mutableText: MutableState
             )
         },
         keyboardOptions = KeyboardOptions(
-            keyboardType = if (password) KeyboardType.Password else KeyboardType.Email
+            keyboardType = if (password) KeyboardType.Password else if (number) KeyboardType.Number else KeyboardType.Email
         ),
         shape = RoundedCornerShape(10.dp),
         colors = OutlinedTextFieldDefaults.colors(

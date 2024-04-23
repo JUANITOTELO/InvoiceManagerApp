@@ -1,6 +1,7 @@
 package com.devdavidm.invoicemanagerapp.homepage
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
@@ -27,6 +28,7 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -40,26 +42,65 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.Source
+import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@Composable
-fun DirectoryPage(){
-    val years = (2013..3033).toList()
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.google.firebase.firestore.FirebaseFirestore
 
-    LazyColumn(
-        verticalArrangement = Arrangement.SpaceEvenly
+@Composable
+fun DirectoryPage(db: FirebaseFirestore) {
+    val customersList = remember { mutableStateOf(listOf<String>()) }
+    val isRefreshing = remember { mutableStateOf(false) }
+
+    LaunchedEffect(key1 = Unit) {
+        isRefreshing.value = true
+        db.collection("Customers").get()
+            .addOnSuccessListener { result ->
+                val tempList = mutableListOf<String>()
+                for (document in result) {
+                    tempList.add(document.data["firstname"].toString())
+                }
+                customersList.value = tempList
+                isRefreshing.value = false
+            }
+    }
+
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing = isRefreshing.value),
+        onRefresh = {
+            isRefreshing.value = true
+            db.collection("Customers").get()
+                .addOnSuccessListener { result ->
+                    val tempList = mutableListOf<String>()
+                    for (document in result) {
+                        tempList.add(document.data["firstname"].toString())
+                    }
+                    customersList.value = tempList
+                    isRefreshing.value = false
+                }
+        },
     ) {
-        items(years.chunked(2)) { rowYears ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(18.dp, 10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Absolute.SpaceAround
-            ) {
-                rowYears.forEach { year ->
-                    MyDirectory(text = year.toString(), context = LocalContext.current)
+        LazyColumn(
+            verticalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            items(customersList.value.chunked(2)) { customer ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(18.dp, 10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Absolute.SpaceAround
+                ) {
+                    customer.forEach { name ->
+                        MyDirectory(text = name, context = LocalContext.current)
+                    }
                 }
             }
         }
@@ -67,7 +108,7 @@ fun DirectoryPage(){
 }
 
 @Composable
-fun NewFolderFloatingButton() {
+fun NewFolderFloatingButton(navController: NavController) {
     val context = LocalContext.current
     ExtendedFloatingActionButton(
         containerColor = Color(0xFF000000),
@@ -77,13 +118,12 @@ fun NewFolderFloatingButton() {
             .height(65.dp),
         shape = RoundedCornerShape(30),
         onClick = {
-            Toast.makeText(context, "Nuevo directorio", Toast.LENGTH_SHORT).show()
+            navController.navigate("new_customer")
         }
     ){
-        Icon(Icons.Rounded.CreateNewFolder, contentDescription = "Nuevo directorio")
+        Icon(Icons.Rounded.CreateNewFolder, contentDescription = "Nuevo cliente")
     }
 }
-
 @Composable
 fun MyDirectory(text: String, context: Context){
     val isClicked = remember { mutableStateOf(false) }
@@ -95,7 +135,11 @@ fun MyDirectory(text: String, context: Context){
         .width(size.value)
         .height(size.value)
         .padding(10.dp)
-        .shadow(elevation = elevation.value, RoundedCornerShape(20.dp), spotColor = Color(0xFF000000))
+        .shadow(
+            elevation = elevation.value,
+            RoundedCornerShape(20.dp),
+            spotColor = Color(0xFF000000)
+        )
         .clip(RoundedCornerShape(20.dp))
         .clickable {
             isClicked.value = !isClicked.value
@@ -104,7 +148,9 @@ fun MyDirectory(text: String, context: Context){
                 isClicked.value = !isClicked.value
             }
 
-            Toast.makeText(context, "Carpeta $text", Toast.LENGTH_SHORT).show()
+            Toast
+                .makeText(context, "Carpeta $text", Toast.LENGTH_SHORT)
+                .show()
         }
         .background(color = Color(0xFFE0E0E0)),
         contentAlignment = Alignment.Center
