@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import com.devdavidm.invoicemanagerapp.camerapreview.CameraPreviewPage
 import com.devdavidm.invoicemanagerapp.forgotpasswordpage.ForgotPasswordPage
 import com.devdavidm.invoicemanagerapp.homepage.HomePage
+import com.devdavidm.invoicemanagerapp.homepage.NewClientPage
 import com.devdavidm.invoicemanagerapp.invoicespages.NewInvoicePage
 import com.devdavidm.invoicemanagerapp.loginpage.LoginPage
 import com.devdavidm.invoicemanagerapp.onboardingpage.OnboardingPage
@@ -17,6 +18,7 @@ import com.devdavidm.invoicemanagerapp.registerpage.RegisterPage
 import com.devdavidm.invoicemanagerapp.ui.theme.InvoiceManagerAppTheme
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,14 +35,16 @@ class MainActivity : ComponentActivity() {
 fun MyApp(context: ComponentActivity){
     val navController = rememberNavController()
     val auth = Firebase.auth
+    val db = Firebase.firestore
     NavHost(navController = navController, startDestination = "onboarding"){
         composable("onboarding"){ OnboardingPage(navController) }
         composable("login"){ LoginPage(context = context, navController, auth) }
         composable("forgot_password"){ ForgotPasswordPage(context = context, navController, auth) }
         composable("register"){ RegisterPage(context = context, navController, auth) }
-        composable("home"){ HomePage(navController, auth) }
-        composable("home/Facturas"){ HomePage(navController, auth, "Facturas") }
-        composable("new_invoice"){ NewInvoicePage(navController) }
+        composable("home"){ HomePage(navController, auth, db) }
+        composable("home/Facturas"){ HomePage(navController, auth, db, "Facturas") }
+        composable("new_invoice"){ NewInvoicePage(navController, db) }
+        composable("new_customer"){ NewClientPage(navController, db) }
         composable("cameraPreview"){ CameraPreviewPage(navController) }
     }
     if(auth.currentUser != null){

@@ -16,9 +16,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
-fun NewInvoicePage(navController: NavHostController) {
+fun NewInvoicePage(navController: NavHostController, db: FirebaseFirestore) {
     Surface(color = Color(0xFFFAFAFA)) {
         Column(
             modifier = Modifier

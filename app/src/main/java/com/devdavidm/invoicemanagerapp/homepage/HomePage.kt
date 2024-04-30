@@ -44,17 +44,20 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.devdavidm.invoicemanagerapp.invoicespages.InvoicesPage
 import com.devdavidm.invoicemanagerapp.invoicespages.NewInvoiceFloatingButton
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomePage(navController: NavController, auth: FirebaseAuth){
-    OptionsMenuDrawer(navController, auth)
+fun HomePage(navController: NavController, auth: FirebaseAuth, db: FirebaseFirestore){
+    OptionsMenuDrawer(navController, auth, db)
 }
 
 @Composable
-fun HomePage(navController: NavController, auth: FirebaseAuth, selectedItem: String){
-    OptionsMenuDrawer(navController, auth, selectedItem)
+fun HomePage(navController: NavController, auth: FirebaseAuth, db: FirebaseFirestore, selectedItem: String){
+    OptionsMenuDrawer(navController, auth, db, selectedItem)
 }
 
 @Composable
@@ -64,10 +67,10 @@ fun getScreenWidth(): Int{
 }
 
 @Composable
-fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth, item: String = "Carpetas"){
+fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth, db: FirebaseFirestore, item: String = "Clientes"){
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val items = listOf("Carpetas", "Facturas", "Perfil")
+    val items = listOf("Clientes", "Facturas", "Perfil")
     val selectedItem = remember { mutableStateOf(item)}
     val screenWidth = getScreenWidth()
     val focusManager = LocalFocusManager.current
@@ -115,7 +118,7 @@ fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth, item: St
                                     "Carpetas" -> {
                                         Icon(
                                             imageVector = Icons.Outlined.Folder,
-                                            contentDescription = "Carpeta"
+                                            contentDescription = "Clientes"
                                         )
                                     }
                                     "Facturas" -> {
@@ -197,7 +200,7 @@ fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth, item: St
                     horizontalAlignment = Alignment.End,
                 ) {
                     Row {
-                        if(selectedItem.value == "Carpetas" || selectedItem.value == "Facturas") {
+                        if(selectedItem.value == "Clientes" || selectedItem.value == "Facturas") {
                             SearchBar()
                         }
                         Icon(
@@ -217,7 +220,7 @@ fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth, item: St
                             .height(3.dp)
                             .background(Color.Black)
                     )
-                    PagesRender(selectedItem.value, navController, auth)
+                    PagesRender(selectedItem.value, navController, auth, db)
                 }
             }
             Column(
@@ -227,8 +230,8 @@ fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth, item: St
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.Start
             ) {
-                if (selectedItem.value == "Carpetas"){
-                    NewFolderFloatingButton()
+                if (selectedItem.value == "Clientes"){
+                    NewFolderFloatingButton(navController)
                 } else if (selectedItem.value == "Facturas"){
                     NewInvoiceFloatingButton(navController)
                 }
@@ -238,10 +241,10 @@ fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth, item: St
 }
 
 @Composable
-fun PagesRender(value: String, navController: NavController, auth: FirebaseAuth) {
+fun PagesRender(value: String, navController: NavController, auth: FirebaseAuth, db: FirebaseFirestore) {
     when(value){
-        "Carpetas" -> {
-            DirectoryPage()
+        "Clientes" -> {
+            DirectoryPage(db)
         }
         "Facturas" -> {
             InvoicesPage()
