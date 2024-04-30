@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -23,8 +24,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devdavidm.invoicemanagerapp.loginpage.TextInput
 import com.google.firebase.auth.FirebaseAuth
@@ -59,8 +62,16 @@ fun ContainerFocus(context: ComponentActivity, navController: NavController, aut
         val emailValue = remember {
             mutableStateOf(TextFieldValue())
         }
+        Text(
+            modifier = Modifier
+                .padding(16.dp),
+            fontSize = 20.sp,
+            text = "Ingrese su correo",
+            color = Color(0xFF000000),
+            fontWeight = FontWeight.Bold
+        )
         TextInput(label = "Correo", mutableText = emailValue)
-        Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(18.dp))
         Button(
             modifier = Modifier.height((screenHeight*0.06).dp),
             colors = ButtonDefaults.buttonColors(
