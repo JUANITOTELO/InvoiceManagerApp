@@ -57,6 +57,18 @@ import com.google.firebase.firestore.FirebaseFirestore
 fun DirectoryPage(db: FirebaseFirestore) {
     val customersList = remember { mutableStateOf(listOf<String>()) }
     val isRefreshing = remember { mutableStateOf(false) }
+    val colRef = db.collection("Customers")
+    colRef.addSnapshotListener() { value, error ->
+        if (error != null) {
+            Log.w("TAG", "Listen failed.", error)
+            return@addSnapshotListener
+        }
+        val tempList = mutableListOf<String>()
+        for (document in value!!) {
+            tempList.add(document.data["firstname"].toString())
+        }
+        customersList.value = tempList
+    }
 
     LaunchedEffect(key1 = Unit) {
         isRefreshing.value = true
