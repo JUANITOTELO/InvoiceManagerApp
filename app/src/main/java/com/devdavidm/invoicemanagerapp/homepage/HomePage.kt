@@ -16,7 +16,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ContactPage
+import androidx.compose.material.icons.outlined.Diamond
 import androidx.compose.material.icons.outlined.Folder
+import androidx.compose.material.icons.outlined.FolderOpen
 import androidx.compose.material.icons.outlined.TagFaces
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Menu
@@ -39,8 +41,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devdavidm.invoicemanagerapp.invoicespages.InvoicesPage
 import com.devdavidm.invoicemanagerapp.invoicespages.NewInvoiceFloatingButton
@@ -70,7 +74,7 @@ fun getScreenWidth(): Int{
 fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth, db: FirebaseFirestore, item: String = "Clientes"){
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val items = listOf("Clientes", "Facturas", "Perfil")
+    val items = listOf("Clientes","Productos", "Facturas", "Perfil")
     val selectedItem = remember { mutableStateOf(item)}
     val screenWidth = getScreenWidth()
     val focusManager = LocalFocusManager.current
@@ -115,10 +119,16 @@ fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth, db: Fire
                             ),
                             icon = {
                                 when(item){
-                                    "Carpetas" -> {
+                                    "Clientes" -> {
                                         Icon(
-                                            imageVector = Icons.Outlined.Folder,
+                                            imageVector = Icons.Outlined.FolderOpen,
                                             contentDescription = "Clientes"
+                                        )
+                                    }
+                                    "Productos" -> {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Diamond,
+                                            contentDescription = "Productos"
                                         )
                                     }
                                     "Facturas" -> {
@@ -200,7 +210,7 @@ fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth, db: Fire
                     horizontalAlignment = Alignment.End,
                 ) {
                     Row {
-                        if(selectedItem.value == "Clientes" || selectedItem.value == "Facturas") {
+                        if(selectedItem.value == "Clientes" || selectedItem.value == "Facturas" || selectedItem.value == "Productos") {
                             SearchBar()
                         }
                         Icon(
@@ -248,6 +258,20 @@ fun PagesRender(value: String, navController: NavController, auth: FirebaseAuth,
         }
         "Facturas" -> {
             InvoicesPage()
+        }
+        "Productos" -> {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Productos",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
         "Perfil" -> {
             val user = auth.currentUser
