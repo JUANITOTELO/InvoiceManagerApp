@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devdavidm.invoicemanagerapp.invoicespages.InvoicesPage
 import com.devdavidm.invoicemanagerapp.invoicespages.NewInvoiceFloatingButton
+import com.devdavidm.invoicemanagerapp.productspage.ProductPage
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -106,7 +107,7 @@ fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth, db: Fire
                         NavigationDrawerItem(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(10.dp))
-                                    .border(2.dp, Color.Black, RoundedCornerShape(10.dp)),
+                                .border(2.dp, Color.Black, RoundedCornerShape(10.dp)),
                             shape = RoundedCornerShape(10.dp),
                             label = { Text(item, textAlign = TextAlign.Center) },
                             colors = NavigationDrawerItemDefaults.colors(
@@ -260,18 +261,7 @@ fun PagesRender(value: String, navController: NavController, auth: FirebaseAuth,
             InvoicesPage()
         }
         "Productos" -> {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Productos",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
-                )
-            }
+            ProductPage(db)
         }
         "Perfil" -> {
             val user = auth.currentUser
@@ -281,7 +271,6 @@ fun PagesRender(value: String, navController: NavController, auth: FirebaseAuth,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(text = "Perfil")
-                Text(text = "Nombre: ${user?.displayName}")
                 Text(text = "Correo: ${user?.email}")
             }
         }
