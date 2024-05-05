@@ -2,6 +2,7 @@ package com.devdavidm.invoicemanagerapp.homepage
 
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,6 +33,13 @@ import com.devdavidm.invoicemanagerapp.loginpage.TextInput
 
 @Composable
 fun NewClientPage(navController: NavHostController, db: FirebaseFirestore){
+    BackHandler {
+        navController.navigate("home/Clientes"){
+            popUpTo("new_customer"){
+                inclusive = true
+            }
+        }
+    }
     Surface(
         color = Color(0xFFFAFAFA),
         modifier = Modifier.fillMaxSize()
@@ -65,88 +73,85 @@ fun NewClientPage(navController: NavHostController, db: FirebaseFirestore){
 fun NewClientForm(navController: NavHostController, db: FirebaseFirestore) {
     val context = LocalContext.current
     val screenHeight = LocalConfiguration.current.screenHeightDp
+
+    // Form fields
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceEvenly,
         modifier = Modifier.fillMaxSize()
     ) {
-        // Form fields
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            // Firstname
-            val firstnameValue = remember {
-                mutableStateOf(TextFieldValue())
-            }
-            TextInput(label = "Nombre", mutableText = firstnameValue)
-            // Lastname
-            val lastnameValue = remember {
-                mutableStateOf(TextFieldValue())
-            }
-            TextInput(label = "Apellido", mutableText = lastnameValue)
-            // Email
-            val emailValue = remember {
-                mutableStateOf(TextFieldValue())
-            }
-            TextInput(label = "Correo", mutableText = emailValue)
-            // Phone
-            val phoneValue = remember {
-                mutableStateOf(TextFieldValue())
-            }
-            TextInput(label = "Teléfono", mutableText = phoneValue, number = true)
-            // Address
-            val addressValue = remember {
-                mutableStateOf(TextFieldValue())
-            }
-            TextInput(label = "Dirección", mutableText = addressValue)
-            // ID
-            val idValue = remember {
-                mutableStateOf(TextFieldValue())
-            }
-            TextInput(label = "Documento", mutableText = idValue, number = true)
-            // Save button
-            Spacer(modifier = Modifier.height(15.dp))
-            Button(
-                modifier = Modifier.height((screenHeight*0.06).dp),
-                colors = ButtonDefaults.buttonColors(
-                    contentColor = Color(0xFFFAFAFA),
-                    containerColor = Color(0xFF000000)
-                ),
-                onClick = {
-                    val valid = validateInfo(
-                        firstnameValue.value.text,
-                        lastnameValue.value.text,
-                        emailValue.value.text,
-                        phoneValue.value.text,
-                        addressValue.value.text,
-                        idValue.value.text,
-                    )
-                    if (valid){
-                        db.collection("Customers").add(
-                            hashMapOf(
-                                "firstname" to firstnameValue.value.text,
-                                "lastname" to lastnameValue.value.text,
-                                "email" to emailValue.value.text,
-                                "phone" to phoneValue.value.text.toInt(),
-                                "address" to addressValue.value.text,
-                                "id" to idValue.value.text.toInt()
-                            )
-                        ).addOnSuccessListener {
-                            Toast.makeText(context, "Cliente guardado", Toast.LENGTH_SHORT).show()
-                            navController.popBackStack()
-                        }.addOnFailureListener {
-                            Toast.makeText(context, "Error al guardar el cliente", Toast.LENGTH_SHORT).show()
-                        }
-                    } else {
-                        Toast.makeText(context, "Por favor, llena todos los campos", Toast.LENGTH_SHORT).show()
+        // Firstname
+        val firstnameValue = remember {
+            mutableStateOf(TextFieldValue())
+        }
+        TextInput(label = "Nombre", mutableText = firstnameValue)
+        // Lastname
+        val lastnameValue = remember {
+            mutableStateOf(TextFieldValue())
+        }
+        TextInput(label = "Apellido", mutableText = lastnameValue)
+        // Email
+        val emailValue = remember {
+            mutableStateOf(TextFieldValue())
+        }
+        TextInput(label = "Correo", mutableText = emailValue)
+        // Phone
+        val phoneValue = remember {
+            mutableStateOf(TextFieldValue())
+        }
+        TextInput(label = "Teléfono", mutableText = phoneValue, number = true)
+        // Address
+        val addressValue = remember {
+            mutableStateOf(TextFieldValue())
+        }
+        TextInput(label = "Dirección", mutableText = addressValue)
+        // ID
+        val idValue = remember {
+            mutableStateOf(TextFieldValue())
+        }
+        TextInput(label = "Documento", mutableText = idValue, number = true)
+        // Save button
+        Spacer(modifier = Modifier.height(15.dp))
+        Button(
+            modifier = Modifier.height((screenHeight*0.06).dp),
+            colors = ButtonDefaults.buttonColors(
+                contentColor = Color(0xFFFAFAFA),
+                containerColor = Color(0xFF000000)
+            ),
+            onClick = {
+                val valid = validateInfo(
+                    firstnameValue.value.text,
+                    lastnameValue.value.text,
+                    emailValue.value.text,
+                    phoneValue.value.text,
+                    addressValue.value.text,
+                    idValue.value.text,
+                )
+                if (valid){
+                    db.collection("Customers").add(
+                        hashMapOf(
+                            "firstname" to firstnameValue.value.text,
+                            "lastname" to lastnameValue.value.text,
+                            "email" to emailValue.value.text,
+                            "phone" to phoneValue.value.text.toInt(),
+                            "address" to addressValue.value.text,
+                            "id" to idValue.value.text.toInt()
+                        )
+                    ).addOnSuccessListener {
+                        Toast.makeText(context, "Cliente guardado", Toast.LENGTH_SHORT).show()
+                        navController.popBackStack()
+                    }.addOnFailureListener {
+                        Toast.makeText(context, "Error al guardar el cliente", Toast.LENGTH_SHORT).show()
                     }
+                } else {
+                    Toast.makeText(context, "Por favor, llena todos los campos", Toast.LENGTH_SHORT).show()
                 }
-            ) {
-                Text(text = "Guardar")
             }
+        ) {
+            Text(text = "Guardar")
         }
     }
+
 }
 
 fun validateInfo(

@@ -20,6 +20,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
 fun NewInvoicePage(navController: NavHostController, db: FirebaseFirestore) {
+    BackHandler {
+        navController.navigate("home/Facturas"){
+            popUpTo("new_invoice") {
+                inclusive = true
+            }
+        }
+    }
     Surface(color = Color(0xFFFAFAFA)) {
         Column(
             modifier = Modifier
@@ -34,13 +41,6 @@ fun NewInvoicePage(navController: NavHostController, db: FirebaseFirestore) {
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
-        }
-    }
-    BackHandler {
-        navController.navigate("home/Facturas"){
-            popUpTo("new_invoice"){
-                inclusive = true
-            }
         }
     }
 }

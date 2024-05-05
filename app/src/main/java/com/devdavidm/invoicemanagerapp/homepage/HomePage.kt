@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ContactPage
 import androidx.compose.material.icons.outlined.Diamond
-import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.FolderOpen
 import androidx.compose.material.icons.outlined.TagFaces
 import androidx.compose.material.icons.rounded.Close
@@ -41,18 +40,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devdavidm.invoicemanagerapp.invoicespages.InvoicesPage
 import com.devdavidm.invoicemanagerapp.invoicespages.NewInvoiceFloatingButton
+import com.devdavidm.invoicemanagerapp.productspage.NewProductFloatingButton
 import com.devdavidm.invoicemanagerapp.productspage.ProductPage
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.launch
 
 @Composable
@@ -245,6 +241,8 @@ fun OptionsMenuDrawer(navController: NavController, auth: FirebaseAuth, db: Fire
                     NewFolderFloatingButton(navController)
                 } else if (selectedItem.value == "Facturas"){
                     NewInvoiceFloatingButton(navController)
+                } else if (selectedItem.value == "Productos"){
+                    NewProductFloatingButton(navController)
                 }
             }
         }

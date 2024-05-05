@@ -14,6 +14,7 @@ import com.devdavidm.invoicemanagerapp.homepage.NewClientPage
 import com.devdavidm.invoicemanagerapp.invoicespages.NewInvoicePage
 import com.devdavidm.invoicemanagerapp.loginpage.LoginPage
 import com.devdavidm.invoicemanagerapp.onboardingpage.OnboardingPage
+import com.devdavidm.invoicemanagerapp.productspage.NewProductPage
 import com.devdavidm.invoicemanagerapp.registerpage.RegisterPage
 import com.devdavidm.invoicemanagerapp.ui.theme.InvoiceManagerAppTheme
 import com.google.firebase.Firebase
@@ -43,8 +44,11 @@ fun MyApp(context: ComponentActivity){
         composable("register"){ RegisterPage(context = context, navController, auth) }
         composable("home"){ HomePage(navController, auth, db) }
         composable("home/Facturas"){ HomePage(navController, auth, db, "Facturas") }
+        composable("home/Clientes"){ HomePage(navController, auth, db, "Clientes") }
+        composable("home/Productos"){ HomePage(navController, auth, db, "Productos") }
         composable("new_invoice"){ NewInvoicePage(navController, db) }
         composable("new_customer"){ NewClientPage(navController, db) }
+        composable("new_product"){ NewProductPage(navController, db) }
         composable("cameraPreview"){ CameraPreviewPage(navController) }
     }
     if(auth.currentUser != null){
