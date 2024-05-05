@@ -21,7 +21,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devdavidm.invoicemanagerapp.R
 
@@ -71,6 +74,14 @@ fun OnboardingPage(navController: NavController){
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
         ) {
+            Text(
+                text = "Invoice Manager",
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                color = Color(0xFF000000)
+            )
+            Spacer(modifier = Modifier.height(30.dp))
             Button(
                 modifier = Modifier.height((screenHeight*0.06).dp),
                 colors = ButtonDefaults.buttonColors(

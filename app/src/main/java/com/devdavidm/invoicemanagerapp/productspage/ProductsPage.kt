@@ -132,10 +132,13 @@ fun ProductPage(db: FirebaseFirestore){
                         modifier = Modifier.padding(18.dp)
                     )
                     val expanded = remember { mutableStateOf(false) }
-                    Box{
+                    Box(
+                        modifier = Modifier
+                            .padding(10.dp)
+                    ){
                         Icon(
                             imageVector = Icons.Filled.MoreVert,
-                            contentDescription = "More options",
+                            contentDescription = "Mas opciones",
                             modifier = Modifier
                                 .padding(16.dp)
                                 .clickable { expanded.value = true }
