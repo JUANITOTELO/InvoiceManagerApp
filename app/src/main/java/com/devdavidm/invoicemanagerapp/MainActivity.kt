@@ -15,6 +15,7 @@ import com.devdavidm.invoicemanagerapp.invoicespages.NewInvoicePage
 import com.devdavidm.invoicemanagerapp.loginpage.LoginPage
 import com.devdavidm.invoicemanagerapp.onboardingpage.OnboardingPage
 import com.devdavidm.invoicemanagerapp.productspage.NewProductPage
+import com.devdavidm.invoicemanagerapp.productspage.UpdateProductPage
 import com.devdavidm.invoicemanagerapp.registerpage.RegisterPage
 import com.devdavidm.invoicemanagerapp.ui.theme.InvoiceManagerAppTheme
 import com.google.firebase.Firebase
@@ -49,6 +50,10 @@ fun MyApp(context: ComponentActivity){
         composable("new_invoice"){ NewInvoicePage(navController, db) }
         composable("new_customer"){ NewClientPage(navController, db) }
         composable("new_product"){ NewProductPage(navController, db) }
+        composable("update_product/{id}"){backStackEntry ->
+            backStackEntry.arguments?.getString("id")
+                ?.let { UpdateProductPage(navController, db, it) }
+        }
         composable("cameraPreview"){ CameraPreviewPage(navController) }
     }
     if(auth.currentUser != null){

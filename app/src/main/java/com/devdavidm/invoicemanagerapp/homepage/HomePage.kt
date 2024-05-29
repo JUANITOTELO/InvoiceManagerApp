@@ -259,7 +259,7 @@ fun PagesRender(value: String, navController: NavController, auth: FirebaseAuth,
             InvoicesPage()
         }
         "Productos" -> {
-            ProductPage(db)
+            ProductPage(navController, db)
         }
         "Perfil" -> {
             val user = auth.currentUser

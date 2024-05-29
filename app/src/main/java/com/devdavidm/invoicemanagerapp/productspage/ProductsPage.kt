@@ -1,6 +1,7 @@
 package com.devdavidm.invoicemanagerapp.productspage
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,8 +18,11 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -26,12 +30,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,13 +50,17 @@ import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
-fun ProductPage(db: FirebaseFirestore){
+fun ProductPage(navController: NavController, db: FirebaseFirestore){
     val totalProducts = remember { mutableIntStateOf(0) }
     val productsList = remember { mutableStateOf(listOf<String>()) }
+    val productsIdsList = remember { mutableListOf<String>() }
     val isRefreshing = remember { mutableStateOf(false) }
+    var showDeleteDialog: Boolean by remember { mutableStateOf(false) }
+    var deleteProductId: String by remember { mutableStateOf("") }
     val colRef = db.collection("Products")
+    val context = LocalContext.current
 
-    colRef.addSnapshotListener() { value, error ->
+    colRef.orderBy("num").addSnapshotListener() { value, error ->
         if (error != null) {
             Log.w("TAG", "Listen failed.", error)
             return@addSnapshotListener
@@ -64,19 +75,23 @@ fun ProductPage(db: FirebaseFirestore){
             }
         }
         val tempList = mutableListOf<String>()
+        productsIdsList.clear()
         for (document in value!!) {
             tempList.add("Producto #${document.data["num"].toString()}: ${document.data["name"].toString()}")
+            productsIdsList.add(document.id)
         }
         productsList.value = tempList
     }
 
     LaunchedEffect(key1 = Unit) {
         isRefreshing.value = true
-        db.collection("Products").get()
+        colRef.orderBy("num").get()
             .addOnSuccessListener { result ->
-                val tempList = mutableListOf<String>()
+                var tempList = mutableListOf<String>()
+                productsIdsList.clear()
                 for (document in result) {
                     tempList.add("Producto #${document.data["num"].toString()}: ${document.data["name"].toString()}")
+                    productsIdsList.add(document.id)
                 }
                 productsList.value = tempList
                 isRefreshing.value = false
@@ -87,17 +102,36 @@ fun ProductPage(db: FirebaseFirestore){
         state = rememberSwipeRefreshState(isRefreshing = isRefreshing.value),
         onRefresh = {
             isRefreshing.value = true
-            db.collection("Products").get()
+            colRef.orderBy("num").get()
                 .addOnSuccessListener { result ->
                     val tempList = mutableListOf<String>()
+                    productsIdsList.clear()
                     for (document in result) {
                         tempList.add("Producto #${document.data["num"].toString()}: ${document.data["name"].toString()}")
+                        productsIdsList.add(document.id)
                     }
                     productsList.value = tempList
                     isRefreshing.value = false
                 }
         },
     ) {
+        if(showDeleteDialog){
+            DeleteProductDialog(
+                onDismiss = {showDeleteDialog = false},
+                onConfirm = {
+                    colRef.document(deleteProductId)
+                        .delete()
+                        .addOnSuccessListener {
+                            Toast.makeText(context,"Producto $deleteProductId eliminado",Toast.LENGTH_SHORT).show()
+                            deleteProductId = ""
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(context,"Producto no eliminado",Toast.LENGTH_SHORT).show()
+                        }
+                    showDeleteDialog = false
+                }
+            )
+        }
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
         ) {
@@ -121,10 +155,18 @@ fun ProductPage(db: FirebaseFirestore){
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth().selectable(selected = true, onClick = {
-                        // Handle click on item
-                        Log.d("PRODUCTCLICK", "Product ${productsList.value[index]} clicked")
-                    })
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .selectable(selected = true, onClick = {
+                            // Handle click on item
+                            Toast
+                                .makeText(
+                                    context,
+                                    "Product ${productsList.value[index]} clicked",
+                                    Toast.LENGTH_SHORT
+                                )
+                                .show()
+                        })
                 ) {
                     Text(
                         text = productsList.value[index],
@@ -151,16 +193,18 @@ fun ProductPage(db: FirebaseFirestore){
                             DropdownMenuItem(
                                 text = { Text("Editar") },
                                 onClick = {
-                                // Handle click on Option 1
-                                expanded.value = false
-                            })
+                                    navController.navigate("update_product/${productsIdsList[index]}")
+                                    expanded.value = false
+                                }
+                            )
                             DropdownMenuItem(
                                 text = { Text("Eliminar") },
                                 onClick = {
-                                // Handle click on Option 2
-                                expanded.value = false
-                            })
-                            // Add more DropdownMenuItems for more options
+                                    deleteProductId = productsIdsList[index]
+                                    showDeleteDialog = true
+                                    expanded.value = false
+                                }
+                            )
                         }
                     }
                 }
@@ -194,4 +238,54 @@ fun NewProductFloatingButton(navController: NavController) {
             Icon(Icons.Rounded.Add, contentDescription = "Nuevo producto")
         }
 
+}
+
+@Composable
+fun DeleteProductDialog(onDismiss: () -> Unit, onConfirm: () -> Unit){
+    AlertDialog(
+        containerColor = Color(0xFFFAFAFA),
+        onDismissRequest = onDismiss,
+        icon = { 
+            Icon(
+                imageVector = Icons.Filled.Warning,
+                contentDescription = "Warning",
+                tint = Color(0xFFCC0000),
+            )
+        },
+        title = {
+                Text(
+                    color = Color(0xFF333333),
+                    text = "Advertencia"
+                )
+        },
+        text = {
+               Text(
+                   color = Color(0xFF000000),
+                   textAlign = TextAlign.Center,
+                   text = "Eliminar un producto no se puede revertir. ¿Desea continuar?"
+               )
+        },
+        confirmButton = {
+            Button(
+                onClick = onConfirm,
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = Color(0xFFFAFAFA),
+                    containerColor = Color(0xFFFF0000)
+                )
+            ) {
+                Text(text = "Eliminar")
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = Color(0xFFFAFAFA),
+                    containerColor = Color(0xFF000000)
+                )
+            ) {
+                Text(text = "Cancelar")
+            }
+        }
+    )
 }
