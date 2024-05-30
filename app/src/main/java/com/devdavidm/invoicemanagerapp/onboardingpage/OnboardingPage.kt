@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -50,6 +51,20 @@ fun OnboardingPage(navController: NavController){
                     end = Offset(size.width, size.height*0.05f),
                     strokeWidth = 20f,
                     pathEffect = PathEffect.dashPathEffect(floatArrayOf(size.width*0.1f, size.width*0.05f), 0f)
+                )
+                drawCircle(
+                    color = Color(0xFF000000),
+                    radius = size.width/2.5f,
+                    center = Offset(screenWidth.dp.toPx(), screenHeight.dp.toPx()),
+                    style = Stroke(
+                        width = 10.dp.toPx(),
+                        pathEffect = PathEffect.dashPathEffect(floatArrayOf(size.width*0.1f, size.width*0.05f), 0f)
+                    )
+                )
+                drawCircle(
+                    color = Color(0xFFFAFAFA),
+                    radius = size.width/2.5f,
+                    center = Offset(screenWidth.dp.toPx(), screenHeight.dp.toPx())
                 )
             }
         }
