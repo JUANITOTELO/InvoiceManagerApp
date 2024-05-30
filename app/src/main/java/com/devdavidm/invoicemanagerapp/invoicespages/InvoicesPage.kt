@@ -68,7 +68,7 @@ fun NewInvoiceFloatingButton(navController: NavController){
                     contentColor = Color(0xFFFAFAFA),
                     onClick = {
                         navController.navigate("new_invoice")
-                        Toast.makeText(context, "Nueva Factura", Toast.LENGTH_SHORT).show()
+                        // Toast.makeText(context, "Nueva Factura", Toast.LENGTH_SHORT).show()
                     }
                 ) {
                     Icon(

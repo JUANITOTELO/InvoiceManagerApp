@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,7 +27,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
@@ -43,7 +43,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.devdavidm.invoicemanagerapp.R
-import com.devdavidm.invoicemanagerapp.loginpage.login
 import com.google.firebase.auth.FirebaseAuth
 
 fun register(email: String, password: String, auth: FirebaseAuth, context: ComponentActivity, navController: NavController){
@@ -105,11 +104,21 @@ fun ContainerFocus(context: ComponentActivity, navController: NavController, aut
             mutableStateOf(TextFieldValue())
         }
         Image(painter = logo, contentDescription = "Logo")
-        TextInput(label = "Correo", mutableText = emailValue)
+        TextInput(label = "Correo", mutableText = emailValue, enabled = false)
         Spacer(modifier = Modifier.height(7.dp))
-        TextInput(label = "Contraseña", password = true, mutableText = passwordValue)
+        TextInput(
+            label = "Contraseña",
+            password = true,
+            mutableText = passwordValue,
+            enabled = false
+        )
         Spacer(modifier = Modifier.height(7.dp))
-        TextInput(label = "Confirmar Contraseña", password = true, mutableText = confirmPasswordValue)
+        TextInput(
+            label = "Confirmar Contraseña",
+            password = true,
+            mutableText = confirmPasswordValue,
+            enabled = false
+        )
         Spacer(modifier = Modifier.height(20.dp))
         Button(
             modifier = Modifier.height((screenHeight*0.06).dp),
@@ -137,8 +146,14 @@ fun ContainerFocus(context: ComponentActivity, navController: NavController, aut
 
 
 @Composable
-fun TextInput(label: String, password: Boolean =false, mutableText: MutableState<TextFieldValue>){
+fun TextInput(
+    label: String,
+    enabled: Boolean = true,
+    password: Boolean = false,
+    mutableText: MutableState<TextFieldValue>,
+){
     OutlinedTextField(
+        enabled = enabled,
         value = mutableText.value,
         onValueChange = {mutableText.value=it},
         label = { Text(label) },
@@ -159,9 +174,11 @@ fun TextInput(label: String, password: Boolean =false, mutableText: MutableState
             cursorColor = Color(0xFF000000),
             focusedLabelColor = Color(0xFF000000),
             focusedTextColor = Color(0xFF282828),
-            unfocusedTextColor = Color(0xFF000000)
+            unfocusedTextColor = Color(0xFF000000),
+            disabledTextColor = Color(0xFF000000)
         ),
-        modifier = Modifier.focusable()
+        modifier = Modifier.focusable().fillMaxWidth(),
+        singleLine = true
     )
 }
 
